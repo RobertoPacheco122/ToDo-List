@@ -3,6 +3,22 @@
 
 @custom-variant dark (&:is(.dark *));
 
+@theme {
+  --font-primary: "Inter", sans-serif;
+  --color-product-blue: #4ea8de;
+  --color-product-blue-dark: #1e6f9f;
+  --color-product-purple: #8284fa;
+  --color-product-purple-dark: #5e60ce;
+  --color-base-gray-700: #0d0d0d;
+  --color-base-gray-600: #1a1a1a;
+  --color-base-gray-500: #262626;
+  --color-base-gray-400: #333333;
+  --color-base-gray-300: #808080;
+  --color-base-gray-200: #d9d9d9;
+  --color-base-gray-100: #f2f2f2;
+  --color-feedback-danger: #e25858;
+}
+
 @theme inline {
   --radius-sm: calc(var(--radius) - 4px);
   --radius-md: calc(var(--radius) - 2px);
