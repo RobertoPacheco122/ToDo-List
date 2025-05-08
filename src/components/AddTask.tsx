@@ -8,11 +8,15 @@ interface AddTaskProps {
     event: React.FormEvent<HTMLFormElement>,
     description: string
   ) => void;
+  taskDescription: string;
+  setTaskDescription: React.Dispatch<React.SetStateAction<string>>;
 }
 
-export const AddTask = ({ handleTaskFormSubmit }: AddTaskProps) => {
-  const [taskDescription, setTaskDescription] = React.useState("");
-
+export const AddTask = ({
+  handleTaskFormSubmit,
+  setTaskDescription,
+  taskDescription,
+}: AddTaskProps) => {
   return (
     <section className="flex items-center justify-center mt-[-1.5rem]">
       <div className="w-full max-w-3xl">

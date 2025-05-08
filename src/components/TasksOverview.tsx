@@ -4,6 +4,7 @@ import { AddTask } from "./AddTask";
 import { Separator } from "./ui/separator";
 import { FileText } from "lucide-react";
 import { Task } from "./Task";
+import { toast } from "sonner";
 
 type TaskStatus = "Pending" | "Concluded";
 
@@ -15,12 +16,20 @@ export interface TaskInfos {
 
 export const TasksOverview = () => {
   const [tasks, setTasks] = React.useState<TaskInfos[]>([]);
-
+  const [taskDescription, setTaskDescription] = React.useState("");
   const handleTaskFormSubmit = (
     event: React.FormEvent<HTMLFormElement>,
     description: string
   ) => {
     event.preventDefault();
+
+    if (description === "") {
+      toast("Ocorreu um problema ao criar a tarefa!", {
+        description: "A tarefa precisa ter uma descrição",
+      });
+
+      return;
+    }
 
     setTasks((previousValues) => {
       const newValues = [...previousValues];
@@ -35,15 +44,38 @@ export const TasksOverview = () => {
 
       return newValues;
     });
+
+    toast("Tarefa criada com sucesso!");
+
+    setTaskDescription("");
+  };
+
+  const handleDeleteTaskClick = (id: string) => {
+    setTasks((previousValues) => {
+      const newValues = [...previousValues].filter((task) => task.id !== id);
+
+      if (newValues.length < previousValues.length)
+        toast("Tarefa excluída com sucesso");
+      else toast("Tarefa não foi encontrada");
+
+      return newValues;
+    });
   };
 
   return (
     <main>
-      <AddTask handleTaskFormSubmit={handleTaskFormSubmit} />
+      <AddTask
+        taskDescription={taskDescription}
+        setTaskDescription={setTaskDescription}
+        handleTaskFormSubmit={handleTaskFormSubmit}
+      />
       <section className="flex items-center justify-center mt-16">
         <div className="w-full max-w-3xl">
           <TasksOverviewHeader />
-          <TasksOverviewContent tasks={tasks} />
+          <TasksOverviewContent
+            tasks={tasks}
+            handleDeleteTaskClick={handleDeleteTaskClick}
+          />
         </div>
       </section>
     </main>
@@ -80,18 +112,22 @@ const TasksOverviewStatus = () => {
 
 interface TasksOverviewContentProps {
   tasks: TaskInfos[];
+  handleDeleteTaskClick: (id: string) => void;
 }
 
-const TasksOverviewContent = ({ tasks }: TasksOverviewContentProps) => {
+const TasksOverviewContent = ({
+  handleDeleteTaskClick,
+  tasks,
+}: TasksOverviewContentProps) => {
   if (tasks.length === 0) return <TasksOverviewContentEmpty />;
 
   return (
-    <div className="flex items-center flex-col mt-6">
-      <ul className="w-full">
+    <div className="flex items-center flex-col mt-6 mb-6">
+      <ul className="w-full space-y-3">
         {tasks.map((task) => {
           return (
             <li key={task.id}>
-              <Task data={task} />
+              <Task data={task} handleDeleteTaskClick={handleDeleteTaskClick} />
             </li>
           );
         })}

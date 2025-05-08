@@ -5,9 +5,10 @@ import { TaskInfos } from "./TasksOverview";
 
 interface TaskProps {
   data: TaskInfos;
+  handleDeleteTaskClick: (id: string) => void;
 }
 
-export const Task = ({ data }: TaskProps) => {
+export const Task = ({ data, handleDeleteTaskClick }: TaskProps) => {
   return (
     <div className="bg-base-gray-400 p-4 rounded-sm">
       <div className="flex ">
@@ -15,7 +16,10 @@ export const Task = ({ data }: TaskProps) => {
           <TaskConcludeButton />
           <span className="text-sm text-base-gray-100">{data.description}</span>
         </div>
-        <Button className="group p-1 h-6 m-0 bg-transparent hover:cursor-pointer hover:bg-base-gray-500 ">
+        <Button
+          className="group p-1 h-6 m-0 bg-transparent hover:cursor-pointer hover:bg-base-gray-500"
+          onClick={() => handleDeleteTaskClick(data.id)}
+        >
           <i>
             <Trash2
               className="text-base-gray-300 group-hover:text-feedback-danger transition-colors duration-200"
