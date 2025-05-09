@@ -83,8 +83,6 @@ export const TasksOverview = () => {
     });
   };
 
-  console.log("tasks", tasks);
-
   return (
     <main>
       <AddTask
