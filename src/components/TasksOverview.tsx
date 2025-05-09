@@ -6,7 +6,7 @@ import { FileText } from "lucide-react";
 import { Task } from "./Task";
 import { toast } from "sonner";
 
-type TaskStatus = "Pending" | "Concluded";
+export type TaskStatus = "Pending" | "Concluded";
 
 export interface TaskInfos {
   id: string;
@@ -17,6 +17,7 @@ export interface TaskInfos {
 export const TasksOverview = () => {
   const [tasks, setTasks] = React.useState<TaskInfos[]>([]);
   const [taskDescription, setTaskDescription] = React.useState("");
+
   const handleTaskFormSubmit = (
     event: React.FormEvent<HTMLFormElement>,
     description: string
@@ -54,13 +55,35 @@ export const TasksOverview = () => {
     setTasks((previousValues) => {
       const newValues = [...previousValues].filter((task) => task.id !== id);
 
-      if (newValues.length < previousValues.length)
-        toast("Tarefa excluída com sucesso");
-      else toast("Tarefa não foi encontrada");
-
       return newValues;
     });
+
+    toast("Tarefa excluída com sucesso");
   };
+
+  const handleToggleTaskStatusClick = (id: string) => {
+    setTasks((previousValues) => {
+      const taskIndex = previousValues.findIndex((task) => task.id === id);
+      if (taskIndex === -1) return previousValues;
+
+      const task = previousValues[taskIndex];
+
+      // Cria uma nova task com status alternado
+      const updatedTask: TaskInfos = {
+        ...task,
+        status: task.status === "Concluded" ? "Pending" : "Concluded",
+      };
+
+      // Retorna nova lista com a task atualizada
+      return [
+        ...previousValues.slice(0, taskIndex),
+        updatedTask,
+        ...previousValues.slice(taskIndex + 1),
+      ];
+    });
+  };
+
+  console.log("tasks", tasks);
 
   return (
     <main>
@@ -75,6 +98,7 @@ export const TasksOverview = () => {
           <TasksOverviewContent
             tasks={tasks}
             handleDeleteTaskClick={handleDeleteTaskClick}
+            handleToggleTaskStatusClick={handleToggleTaskStatusClick}
           />
         </div>
       </section>
@@ -135,10 +159,12 @@ const TasksOverviewStatus = ({
 interface TasksOverviewContentProps {
   tasks: TaskInfos[];
   handleDeleteTaskClick: (id: string) => void;
+  handleToggleTaskStatusClick: (id: string) => void;
 }
 
 const TasksOverviewContent = ({
   handleDeleteTaskClick,
+  handleToggleTaskStatusClick,
   tasks,
 }: TasksOverviewContentProps) => {
   if (tasks.length === 0) return <TasksOverviewContentEmpty />;
@@ -149,7 +175,11 @@ const TasksOverviewContent = ({
         {tasks.map((task) => {
           return (
             <li key={task.id}>
-              <Task data={task} handleDeleteTaskClick={handleDeleteTaskClick} />
+              <Task
+                data={task}
+                handleDeleteTaskClick={handleDeleteTaskClick}
+                handleToggleTaskStatusClick={handleToggleTaskStatusClick}
+              />
             </li>
           );
         })}
