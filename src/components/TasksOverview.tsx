@@ -68,13 +68,11 @@ export const TasksOverview = () => {
 
       const task = previousValues[taskIndex];
 
-      // Cria uma nova task com status alternado
       const updatedTask: TaskInfos = {
         ...task,
         status: task.status === "Concluded" ? "Pending" : "Concluded",
       };
 
-      // Retorna nova lista com a task atualizada
       return [
         ...previousValues.slice(0, taskIndex),
         updatedTask,
