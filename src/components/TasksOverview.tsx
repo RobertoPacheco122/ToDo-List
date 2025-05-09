@@ -71,7 +71,7 @@ export const TasksOverview = () => {
       />
       <section className="flex items-center justify-center mt-16">
         <div className="w-full max-w-3xl">
-          <TasksOverviewHeader />
+          <TasksOverviewHeader tasks={tasks} />
           <TasksOverviewContent
             tasks={tasks}
             handleDeleteTaskClick={handleDeleteTaskClick}
@@ -86,15 +86,27 @@ interface TasksOverviewHeader {
   tasks: TaskInfos[];
 }
 
-const TasksOverviewHeader = () => {
+const TasksOverviewHeader = ({ tasks }: TasksOverviewHeader) => {
+  const concludedTasks = tasks.filter(({ status }) => status === "Concluded");
+  const pendingTasks = tasks.filter(({ status }) => status === "Pending");
+
   return (
     <div>
       <div className="flex items-center justify-between mb-6">
         <span className="text-product-blue text-sm flex gap-2">
-          Tarefas criadas <TasksOverviewStatus />
+          Tarefas criadas{" "}
+          <TasksOverviewStatus
+            variant="Pending"
+            pending={pendingTasks.length}
+          />
         </span>
         <span className="text-product-purple text-sm flex gap-2">
-          Concluídas <TasksOverviewStatus />
+          Concluídas{" "}
+          <TasksOverviewStatus
+            variant="Concluded"
+            concluded={concludedTasks.length}
+            pending={pendingTasks.length}
+          />
         </span>
       </div>
       <Separator className="bg-base-gray-400" />
@@ -102,10 +114,20 @@ const TasksOverviewHeader = () => {
   );
 };
 
-const TasksOverviewStatus = () => {
+interface TasksOverviewStatusProps {
+  variant: TaskStatus;
+  concluded?: number;
+  pending?: number;
+}
+
+const TasksOverviewStatus = ({
+  variant,
+  concluded = 0,
+  pending = 0,
+}: TasksOverviewStatusProps) => {
   return (
     <div className="bg-base-gray-400 rounded-md text-white text-xs text-center block pt-1 pb-1 pr-2 pl-2">
-      3
+      {variant === "Pending" ? pending : `${concluded} de ${pending}`}
     </div>
   );
 };
