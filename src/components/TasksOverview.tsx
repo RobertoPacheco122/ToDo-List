@@ -82,7 +82,7 @@ export const TasksOverview = () => {
   };
 
   return (
-    <main>
+    <main className="pl-8 pr-8">
       <AddTask
         taskDescription={taskDescription}
         setTaskDescription={setTaskDescription}
@@ -108,24 +108,20 @@ interface TasksOverviewHeader {
 
 const TasksOverviewHeader = ({ tasks }: TasksOverviewHeader) => {
   const concludedTasks = tasks.filter(({ status }) => status === "Concluded");
-  const pendingTasks = tasks.filter(({ status }) => status === "Pending");
 
   return (
     <div>
       <div className="flex items-center justify-between mb-6">
         <span className="text-product-blue text-sm flex gap-2">
           Tarefas criadas{" "}
-          <TasksOverviewStatus
-            variant="Pending"
-            pending={pendingTasks.length}
-          />
+          <TasksOverviewStatus variant="Pending" pending={tasks.length} />
         </span>
         <span className="text-product-purple text-sm flex gap-2">
           Concluídas{" "}
           <TasksOverviewStatus
             variant="Concluded"
             concluded={concludedTasks.length}
-            pending={pendingTasks.length}
+            pending={tasks.length}
           />
         </span>
       </div>
@@ -188,10 +184,10 @@ const TasksOverviewContentEmpty = () => {
   return (
     <div className="flex items-center flex-col mt-16">
       <FileText size={58} className="text-base-gray-400 mb-4" />
-      <span className="text-base-gray-300 font-semibold">
+      <span className="text-base-gray-300 font-semibold block text-center">
         Você ainda não tem tarefas cadastradas
       </span>
-      <span className="text-base-gray-300">
+      <span className="text-base-gray-300 block text-center">
         Crie tarefas e organize seus itens a fazer
       </span>
     </div>
